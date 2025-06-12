@@ -1,0 +1,42 @@
+{
+  "originHash" : "a87384ff6cbcf5e1958a3d03498bf2c3261d6e5013869753a07737f59d6f467e",
+  "pins" : [
+    {
+      "identity" : "otosakufeatureextractor-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Otosaku/OtosakuFeatureExtractor-iOS.git",
+      "state" : {
+        "revision" : "6d15aba00a14f64346f65157bf1258489cc92813",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "plain-pocketfft",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dhrebeniuk/plain-pocketfft.git",
+      "state" : {
+        "revision" : "b9633be41ad61e40a93f58abafed9fb5e281ed18",
+        "version" : "0.0.9"
+      }
+    },
+    {
+      "identity" : "pocketfft",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dhrebeniuk/pocketfft.git",
+      "state" : {
+        "revision" : "f7f2ac6085d9123ab130bb8daebcc11acd72d52c",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "ziparchive",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ZipArchive/ZipArchive.git",
+      "state" : {
+        "revision" : "df35718ea19a94e015b91dc4881dee028ce4cdba",
+        "version" : "2.6.0"
+      }
+    }
+  ],
+  "version" : 3
+}
