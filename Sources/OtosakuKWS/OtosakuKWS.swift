@@ -1,21 +1,23 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-#if canImport(UIKit)
+
 import Foundation
 import OtosakuFeatureExtractor
 import CoreML
 
 
 public class OtosakuKWS {
+    
+    public var onKeywordDetected: ((String, Double) -> Void)? = nil
+    
     private let TAG: String = "OtosakuKWS"
     private let featureExtractor: OtosakuFeatureExtractor
     private let model: OtosakuKWSModel
-    private let classes: [String]
-    
+    private var classes: [String] = []
     private var buffer: [Double] = []
     private let totalFrameLimit = 16000
-    private var threshold: Float = 0.9
+    private var threshold: Double = 0.9
     
     
     public init (
@@ -33,57 +35,51 @@ public class OtosakuKWS {
         )
     }
     
-    public func handleAudioBuffer(_ buff: [Double]) throws {
-        buffer.append(contentsOf: buff)
-        if buffer.count > totalFrameLimit {
-            let overflow = buffer.count - totalFrameLimit
-            buffer.removeFirst(overflow)
-        }
-        if buffer.count != totalFrameLimit {
+    public func handleAudioBuffer(_ buff: [Double]) async {
+        guard buff.count < totalFrameLimit,
+              totalFrameLimit % buff.count == 0 else {
+            print(TAG, "⚠️ Invalid chunk size: \(buff.count)")
             return
         }
-        Task {
-            do {
-                var feats = try featureExtractor.processChunk(chunk: buffer)
-                feats = try featureExtractor.expandDims2D(array: feats)
-                let probsArray = try model.predict(x: feats)
-                var (max, idx) = (-1.0, -1)
-                for i in 0..<probsArray.count {
-                    let value = probsArray[i].doubleValue
-                    if value > max {
-                        max = value
-                        idx = i
-                    }
-                }
-                if max > threshold {
-                    let currentClass = self.classes[idx]
-                }
-            } catch {
-                print(TAG, "handleAudioBuffer: error: \(error)")
-            }
+        buffer.append(contentsOf: buff)
+        if buffer.count > totalFrameLimit {
+            buffer.removeFirst(buffer.count - totalFrameLimit)
         }
         
+        guard buffer.count == totalFrameLimit else { return }
+        
+        do {
+            var feats = try featureExtractor.processChunk(chunk: buffer)
+            
+            let probsArray = try model.predict(x: feats)
+            
+            var (maxProb, bestIdx) = (-1.0, -1)
+            for i in 0..<probsArray.count {
+                let value = probsArray[i].doubleValue
+                if value > maxProb {
+                    maxProb = value
+                    bestIdx = i
+                }
+            }
+            
+            if maxProb > threshold {
+                let className = classes[bestIdx]
+                await callKeywordDetected(className, maxProb)
+            }
+            
+        } catch {
+            print(TAG, "❌ handleAudioBuffer error: \(error)")
+        }
     }
     
-    public func setProbabilityThreshold(threshold: Float) {
+    public func setProbabilityThreshold(_ threshold: Double) {
         self.threshold = threshold
     }
     
-    public static func downloadAndUnzip(
-        from remoteURL: URL,
-        to destinationFolder: URL,
-        progress: @escaping (Float) -> Void,
-        completion: @escaping (Result<URL, Error>) -> Void
-    ) {
-        let downloader = ModelDownloader.shared
-        return downloader.downloadAndUnzip(
-            from: remoteURL,
-            to: destinationFolder,
-            progress: progress,
-            completion: completion
-        )
+    @MainActor
+    private func callKeywordDetected(_ className: String, _ confidence: Double) {
+        onKeywordDetected?(className, confidence)
     }
-    
     
     private func readClasses(from url: URL) throws -> [String] {
         let text = try String(contentsOf: url, encoding: .utf8)
@@ -92,4 +88,3 @@ public class OtosakuKWS {
     }
 }
 
-#endif

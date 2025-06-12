@@ -1,0 +1,81 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "storagePrecision" : "Float16",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 5)",
+        "shortDescription" : "",
+        "shape" : "[1, 5]",
+        "name" : "probs",
+        "type" : "MultiArray"
+      }
+    ],
+    "modelParameters" : [
+
+    ],
+    "specificationVersion" : 6,
+    "mlProgramOperationTypeHistogram" : {
+      "Transpose" : 4,
+      "Squeeze" : 4,
+      "Sub" : 2,
+      "Gather" : 4,
+      "Sigmoid" : 4,
+      "Reshape" : 1,
+      "Cast" : 8,
+      "Softmax" : 1,
+      "Concat" : 1,
+      "Add" : 10,
+      "Tanh" : 2,
+      "Less" : 2,
+      "Reverse" : 2,
+      "Linear" : 14,
+      "Scatter" : 2,
+      "WhileLoop" : 2,
+      "Relu" : 2,
+      "ExpandDims" : 3,
+      "Conv" : 2,
+      "SliceByIndex" : 3,
+      "MaxPool" : 1,
+      "Mul" : 6
+    },
+    "computePrecision" : "Mixed (Float16, Float32, Int32)",
+    "isUpdatable" : "0",
+    "stateSchema" : [
+
+    ],
+    "availability" : {
+      "macOS" : "12.0",
+      "tvOS" : "15.0",
+      "visionOS" : "1.0",
+      "watchOS" : "8.0",
+      "iOS" : "15.0",
+      "macCatalyst" : "15.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_mlProgram"
+    },
+    "userDefinedMetadata" : {
+      "com.github.apple.coremltools.source_dialect" : "TorchScript",
+      "com.github.apple.coremltools.version" : "8.2",
+      "com.github.apple.coremltools.source" : "torch==2.7.0"
+    },
+    "inputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 101 × 80)",
+        "shortDescription" : "",
+        "shape" : "[1, 101, 80]",
+        "name" : "input",
+        "type" : "MultiArray"
+      }
+    ],
+    "generatedClassName" : "CRNNKeywordSpotter",
+    "method" : "predict"
+  }
+]

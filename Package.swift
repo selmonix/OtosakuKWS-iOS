@@ -16,7 +16,7 @@ let package = Package(
             targets: ["OtosakuKWS"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/Otosaku/OtosakuFeatureExtractor-iOS.git", from: "1.0.1"),
+        .package(url: "https://github.com/Otosaku/OtosakuFeatureExtractor-iOS.git", from: "1.0.2"),
         .package(url: "https://github.com/ZipArchive/ZipArchive.git", from: "2.6.0")
     ],
     targets: [
