@@ -5,6 +5,13 @@
 It uses a CRNN CoreML model combined with log-Mel spectrograms for fast, accurate, and low-latency voice command recognition.
 
 ---
+## 🎥 Demo
+
+Watch the model running live on iPhone 13:
+
+![Demo running on iPhone](media/kws-demo.gif)
+
+---
 
 ## 🚀 Getting Started
 
