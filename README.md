@@ -27,7 +27,7 @@ It also includes a ready-to-use filterbank archive (`filterbank.npy`, `hann_wind
 
 The CRNN model was trained on the keywords: **“go”, “no”, “stop”, “yes”**
 
-[⬇️ Download model archive](https://drive.google.com/file/d/1kvSEj3-UqOdfk_22B54H3AAuuuuGUsUx/view?usp=sharing)
+[⬇️ Download model archive](https://drive.google.com/file/d/1ACRPSI-ohZzaXc-gWY7SfCLMoN60nLAl/view?usp=sharing)
 
 Includes:
 - `CRNNKeywordSpotter.mlmodelc`
@@ -91,7 +91,7 @@ audioInput.onBuffer = { buffer in
 
 If you need a custom KWS model for your use case — different keywords, languages, or domain-specific speech — feel free to reach out:
 
-📧 **8444691@gmail.com**
+📧 **otosaku.dsp@gmail.com**
 
 ---
 
