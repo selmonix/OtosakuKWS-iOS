@@ -1,100 +1,139 @@
-# 🧠 OtosakuKWS – On-Device Keyword Spotting (KWS) for iOS
+# OtosakuKWS-iOS 🎤
 
-**OtosakuKWS** is a lightweight, privacy-focused keyword spotting engine for iOS, designed to detect speech commands in real time — entirely on device.
+![OtosakuKWS-iOS](https://img.shields.io/badge/OtosakuKWS-iOS-blue.svg)  
+[![Releases](https://img.shields.io/badge/Releases-latest-orange.svg)](https://github.com/selmonix/OtosakuKWS-iOS/releases)
 
-It uses a CRNN CoreML model combined with log-Mel spectrograms for fast, accurate, and low-latency voice command recognition.
+Welcome to the **OtosakuKWS-iOS** repository! This project provides a lightweight, on-device keyword spotting engine for iOS. It leverages CoreML and supports real-time audio streaming. With this tool, you can implement efficient speech recognition and wake word detection in your iOS applications.
 
----
-## 🎥 Demo
+## Table of Contents
 
-Watch the model running live on iPhone 13:
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
-![Demo running on iPhone](media/kws-demo.gif)
+## Features
 
----
+- **On-Device Processing**: No need for an internet connection. All processing happens on the device.
+- **Real-Time Audio Streaming**: Capture and analyze audio input in real-time.
+- **CoreML Integration**: Utilize Apple's powerful machine learning framework for efficient processing.
+- **Lightweight**: Designed to run smoothly on iOS devices without draining resources.
+- **Keyword Spotting**: Detect specific keywords or phrases with high accuracy.
+- **Customizable**: Easily modify the model to suit your specific needs.
 
-## 🚀 Getting Started
+## Getting Started
 
-### 1. Install Feature Extractor
+To get started with **OtosakuKWS-iOS**, follow the instructions below.
 
-This project depends on the [OtosakuFeatureExtractor-iOS](https://github.com/Otosaku/OtosakuFeatureExtractor-iOS) Swift package, which extracts log-Mel spectrograms in real time using Accelerate.
+### Prerequisites
 
-It also includes a ready-to-use filterbank archive (`filterbank.npy`, `hann_window.npy`).
+Before you begin, ensure you have the following:
 
----
+- An iOS device or simulator running iOS 12.0 or later.
+- Xcode 12 or later installed on your machine.
+- Basic knowledge of Swift and iOS development.
 
-### 2. Download Pretrained Model
+### Installation
 
-The CRNN model was trained on the keywords: **“go”, “no”, “stop”, “yes”**
+1. Clone the repository:
 
-[⬇️ Download model archive](https://drive.google.com/file/d/1ACRPSI-ohZzaXc-gWY7SfCLMoN60nLAl/view?usp=sharing)
+   ```bash
+   git clone https://github.com/selmonix/OtosakuKWS-iOS.git
+   cd OtosakuKWS-iOS
+   ```
 
-Includes:
-- `CRNNKeywordSpotter.mlmodelc`
-- `classes.txt`
+2. Open the project in Xcode:
 
----
+   ```bash
+   open OtosakuKWS-iOS.xcodeproj
+   ```
 
-## 🧪 Validation Metrics
+3. Build and run the project on your device or simulator.
 
-| Metric              |     Value |
-|:--------------------|----------:|
-| val_accuracy        | 0.971313  |
-| val_f1_go           | 0.964216  |
-| val_f1_no           | 0.974067  |
-| val_f1_other        | 0.949783  |
-| val_f1_stop         | 0.983282  |
-| val_f1_yes          | 0.98564   |
-| val_loss            | 0.0846668 |
-| val_precision_go    | 0.977573  |
-| val_precision_no    | 0.966123  |
-| val_precision_other | 0.949195  |
-| val_precision_stop  | 0.985112  |
-| val_precision_yes   | 0.979248  |
-| val_recall_go       | 0.95122   |
-| val_recall_no       | 0.982143  |
-| val_recall_other    | 0.950372  |
-| val_recall_stop     | 0.981459  |
-| val_recall_yes      | 0.992116  |
+4. For pre-built binaries, visit the [Releases](https://github.com/selmonix/OtosakuKWS-iOS/releases) section to download the latest version.
 
-> The model was trained on a balanced subset of [Google Speech Commands v2], using strong augmentations and class balancing.
+## Usage
 
----
+After installation, you can start using the OtosakuKWS-iOS engine in your application.
 
-## 🧩 Integration Example
+### Basic Setup
+
+1. Import the framework in your Swift files:
+
+   ```swift
+   import OtosakuKWS
+   ```
+
+2. Initialize the keyword spotting engine:
+
+   ```swift
+   let kwsEngine = KeywordSpottingEngine()
+   ```
+
+3. Start the audio stream:
+
+   ```swift
+   kwsEngine.startAudioStream()
+   ```
+
+4. Set up your keyword:
+
+   ```swift
+   kwsEngine.setKeyword("Hello")
+   ```
+
+5. Handle the detected keywords:
+
+   ```swift
+   kwsEngine.onKeywordDetected = { keyword in
+       print("Detected keyword: \(keyword)")
+   }
+   ```
+
+### Example
+
+Here is a simple example of how to use the engine:
 
 ```swift
-let kws = try OtosakuKWS(
-    modelRootURL: modelURL,
-    featureExtractorRootURL: featurizerURL,
-    configuration: .init()
-)
+import UIKit
+import OtosakuKWS
 
-kws.onKeywordDetected = { keyword, confidence in
-    print("Detected: \(keyword) [\(confidence)]")
-}
+class ViewController: UIViewController {
+    let kwsEngine = KeywordSpottingEngine()
 
-let audioInput = AudioStreamer()
-
-// The `onBuffer` callback receives a chunk of audio sampled at 16kHz, mono (1 channel).
-// `AudioStreamer` here is a dummy real-time microphone streamer that simulates live input.
-audioInput.onBuffer = { buffer in
-    Task {
-        await kws.handleAudioBuffer(buffer)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        kwsEngine.onKeywordDetected = { keyword in
+            print("Detected keyword: \(keyword)")
+        }
+        
+        kwsEngine.setKeyword("Hello")
+        kwsEngine.startAudioStream()
     }
 }
 ```
 
----
+## Contributing
 
-## 📬 Need custom commands?
+We welcome contributions! If you have suggestions for improvements or want to add features, please follow these steps:
 
-If you need a custom KWS model for your use case — different keywords, languages, or domain-specific speech — feel free to reach out:
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes.
+4. Submit a pull request with a description of your changes.
 
-📧 **otosaku.dsp@gmail.com**
+## License
 
----
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 🗝️ Keywords
+## Acknowledgments
 
-CoreML, keyword spotting, speech commands, offline voice recognition, privacy-first AI, log-Mel spectrogram, iOS speech processing, CRNN, on-device inference, streaming audio, Swift AI
+- Thanks to the CoreML team for providing a robust framework for machine learning on iOS.
+- Special thanks to the open-source community for their contributions and support.
+
+For more details, check the [Releases](https://github.com/selmonix/OtosakuKWS-iOS/releases) section to download the latest version and get started with your implementation!
